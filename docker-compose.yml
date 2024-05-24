@@ -1,0 +1,94 @@
+# version: '3'
+
+# services:
+#   pdf-llm-app:
+#     environment:
+    
+#       - CONFIG_FILE= "C:/Users/Sai Computer/OneDrive/Documents/ProjectWork/foundly-services/config.yml:/usr/src/app/config/config.yml"
+#       - OPENAI_API_KEY=
+#       - CELERY_BROKER_URL=redis://redis:6379/0
+#       - CELERY_RESULT_BACKEND=redis://redis:6379/0
+#     ports:
+#       - "8000:5000"
+#     build: 
+#       context: .
+#       dockerfile: ./Dockerfile
+#     volumes:
+#       - ./src:/usr/src/app/src
+#       - "C:/Users/Sai Computer/OneDrive/Documents/ProjectWork/foundly-services/config.yml:/usr/src/app/config/config.yml"
+#       - ./schema:/usr/src/app/schema
+#     # Add any other configuration here as needed
+    
+#     depends_on:
+#       - redis
+
+#   celery-worker:
+#     build: 
+#       context: .
+#       dockerfile: ./Dockerfile
+    
+#     environment:
+      
+#       - CONFIG_FILE="C:/Users/Sai Computer/OneDrive/Documents/ProjectWork/foundly-services/config.yml:/usr/src/app/config/config.yml"
+#       - OPENAI_API_KEY=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
+#       - CELERY_BROKER_URL=redis://redis:6379/0
+#       - CELERY_RESULT_BACKEND=redis://redis:6379/0
+
+#     depends_on:
+#       - redis
+#       - pdf-llm-app
+
+#   redis:
+#     image: 'redis:7.2-alpine'
+#     ports:
+#       - '6379:6379'
+#     volumes:
+#       - C:/Users/Sai Computer/OneDrive/Documents/ProjectWork/foundly-services/dump.rdb:/data/dump.rdb
+#       - "C:/Users/Sai Computer/OneDrive/Documents/ProjectWork/foundly-services/config.yml:/usr/src/app/config/config.yml"
+
+
+
+version: '3'
+
+services:
+  pdf-llm-app:
+    environment:
+      - PYTHONPATH=/usr/src/app
+      - CONFIG_FILE=/usr/src/app/config/config.yml
+      - OPENAI_API_KEY=
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - DATABASE_URL=
+
+    ports:
+      - "8000:5000"
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./src:/usr/src/app/src
+      - ./config/config.yml:/usr/src/app/config/config.yml
+      - ./schema:/usr/src/app/schema
+    depends_on:
+      - redis
+
+  celery-worker:
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      - PYTHONPATH=/usr/src/app
+      - CONFIG_FILE=/usr/src/app/config/config.yml
+      - OPENAI_API_KEY=
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - DATABASE_URL=
+
+    depends_on:
+      - redis
+      - pdf-llm-app
+
+  redis:
+    image: 'redis:7.2-alpine'
+    ports:
+      - '6379:6379'

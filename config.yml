@@ -1,0 +1,12 @@
+max_tokens: 1000
+prompt:
+  task: Answer the questions in the order the questions are presented only using the supplied background and answer "N/A" if you cannot answer with the background information.
+  detail: Small details but succinct.
+  format: Listed with numbers.
+questions:
+  - What is being pitched?
+  - Anything that isn't clear in the pitch?
+  - Can anything be improved on the pitch?
+  - Who are the founders?
+  - How long have the founders known each other?  
+
